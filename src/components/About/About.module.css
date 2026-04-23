@@ -1,0 +1,139 @@
+.about {
+  position: relative;
+  overflow: hidden;
+}
+
+.about::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border-subtle), transparent);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-12);
+  align-items: center;
+}
+
+.textContent h2 {
+  margin-bottom: var(--space-6);
+}
+
+.bio {
+  font-size: var(--text-lg);
+  color: var(--text-secondary);
+  line-height: 1.8;
+  margin-bottom: var(--space-8);
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-4);
+}
+
+.stat {
+  text-align: center;
+  padding: var(--space-5);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+  background: var(--gradient-card);
+  transition: all var(--transition-base);
+}
+
+.stat:hover {
+  border-color: var(--border-accent);
+  transform: translateY(-2px);
+}
+
+.statNumber {
+  display: block;
+  font-family: var(--font-heading);
+  font-size: var(--text-3xl);
+  font-weight: 700;
+  color: var(--color-primary);
+  margin-bottom: var(--space-1);
+}
+
+.statLabel {
+  font-size: var(--text-sm);
+  color: var(--text-tertiary);
+  font-weight: 500;
+}
+
+/* Code block decoration */
+.codeBlock {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: var(--text-sm);
+  line-height: 1.8;
+  color: var(--text-secondary);
+  overflow: hidden;
+  position: relative;
+}
+
+.codeBlock::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 32px;
+  background: rgba(255, 255, 255, 0.02);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.codeDots {
+  position: absolute;
+  top: 10px;
+  left: 14px;
+  display: flex;
+  gap: 6px;
+}
+
+.codeDots span {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.codeDots span:nth-child(1) { background: #ff5f57; }
+.codeDots span:nth-child(2) { background: #ffbd2e; }
+.codeDots span:nth-child(3) { background: #28c840; }
+
+.codeContent {
+  margin-top: var(--space-8);
+}
+
+.codeLine {
+  display: block;
+  padding: 2px 0;
+}
+
+.codeKeyword { color: #c084fc; }
+.codeString { color: #34d399; }
+.codeProperty { color: #818cf8; }
+.codePunctuation { color: var(--text-tertiary); }
+.codeComment { color: var(--text-tertiary); font-style: italic; }
+
+@media (max-width: 1024px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+  }
+}
+
+@media (max-width: 640px) {
+  .stats {
+    grid-template-columns: 1fr;
+  }
+}

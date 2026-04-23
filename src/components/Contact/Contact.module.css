@@ -1,0 +1,88 @@
+.contact {
+  position: relative;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: var(--space-4);
+}
+
+.subtitle {
+  font-size: var(--text-lg);
+  color: var(--text-secondary);
+  text-align: center;
+  max-width: 500px;
+  margin: 0 auto var(--space-10);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-6);
+  max-width: 900px;
+  margin: 0 auto var(--space-10);
+}
+
+.contactCard {
+  padding: var(--space-6);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.contactIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(129, 140, 248, 0.1);
+  color: var(--color-primary);
+  transition: all var(--transition-base);
+}
+
+.contactCard:hover .contactIcon {
+  background: rgba(129, 140, 248, 0.2);
+  box-shadow: 0 0 20px var(--color-primary-glow);
+  transform: translateY(-3px);
+}
+
+.contactLabel {
+  font-size: var(--text-sm);
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 500;
+}
+
+.contactValue {
+  font-size: var(--text-base);
+  color: var(--text-primary);
+  font-weight: 500;
+  transition: color var(--transition-fast);
+}
+
+.contactCard:hover .contactValue {
+  color: var(--color-primary);
+}
+
+/* CTA */
+.ctaBlock {
+  text-align: center;
+}
+
+.ctaText {
+  font-size: var(--text-lg);
+  color: var(--text-secondary);
+  margin-bottom: var(--space-6);
+}
+
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr;
+    max-width: 400px;
+  }
+}
