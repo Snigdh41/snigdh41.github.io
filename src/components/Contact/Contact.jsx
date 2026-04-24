@@ -181,7 +181,10 @@ function CoffeeChatForm() {
         setTimeout(() => setStatus('idle'), 5000);
       } else {
         setStatus('error');
-        setErrorMsg(data.error || 'Something went wrong. Please try again.');
+        const msg = data.details?.length
+          ? data.details.join(' ')
+          : data.error || 'Something went wrong. Please try again.';
+        setErrorMsg(msg);
         turnstileRef.current?.reset();
         setTurnstileToken(null);
       }
