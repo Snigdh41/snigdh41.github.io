@@ -34,10 +34,21 @@ export const skills = [
 
 export const experience = [
   {
+    role: 'Data Analyst',
+    company: 'Optum Global Solutions',
+    duration: '2025 — Present',
+    durationLabel: 'Current',
+    description: [
+      'Spearheading enterprise data analytics initiatives — translating complex healthcare datasets into actionable intelligence that drives strategic decision-making across business units.',
+      'Designing and optimizing large-scale data pipelines on Databricks and Delta Lake, enabling near-real-time reporting and self-service analytics for cross-functional stakeholders.',
+      'Partnering with engineering and product teams to define KPIs, build interactive dashboards, and surface insights that directly influence roadmap prioritization.',
+    ],
+  },
+  {
     role: 'Software Engineer',
     company: 'Optum Global Solutions',
-    duration: '2023 — 2024',
-    durationLabel: '1 Year',
+    duration: '2023 — 2025',
+    durationLabel: '2 Years',
     description: [
       'Led the design and development of enterprise-scale full-stack applications serving cross-functional business units.',
       'Architected cloud-native solutions on Azure, implementing secure authentication flows and automated workflow orchestration.',
