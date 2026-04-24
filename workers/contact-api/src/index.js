@@ -6,8 +6,8 @@ const ALLOWED_ORIGINS = [
   'http://localhost:3000',
 ];
 
-const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000; // 10 minutes
-const RATE_LIMIT_MAX = 3;
+const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000; // 15 minutes
+const RATE_LIMIT_MAX = 5;
 
 const TURNSTILE_VERIFY_URL = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
 
@@ -98,6 +98,7 @@ async function verifyTurnstile(token, ip, secretKey) {
   });
 
   const result = await response.json();
+  console.log('Turnstile verification result:', JSON.stringify(result));
   return result.success === true;
 }
 
@@ -207,7 +208,10 @@ export default {
 
     // Rate limiting
     const clientIP = request.headers.get('CF-Connecting-IP') || 'unknown';
+    console.log(`[contact] Request from IP: ${clientIP}, Origin: ${origin}`);
+
     if (isRateLimited(clientIP)) {
+      console.log(`[contact] Rate limited: ${clientIP}`);
       return jsonResponse(429, {
         success: false,
         error: 'Too many requests. Please try again in a few minutes.',
@@ -218,13 +222,16 @@ export default {
     let body;
     try {
       body = await request.json();
+      console.log(`[contact] Form from: ${body.name} <${body.email}>, intent: ${body.intent}`);
     } catch {
+      console.log('[contact] Failed to parse JSON body');
       return jsonResponse(400, { success: false, error: 'Invalid request body.' }, origin);
     }
 
     // Validate fields
     const validationErrors = validateBody(body);
     if (validationErrors.length > 0) {
+      console.log('[contact] Validation errors:', validationErrors);
       return jsonResponse(422, {
         success: false,
         error: 'Validation failed.',
@@ -235,12 +242,14 @@ export default {
     // Verify Turnstile token
     const turnstileToken = body.turnstileToken;
     if (!turnstileToken) {
+      console.log('[contact] No Turnstile token provided');
       return jsonResponse(400, {
         success: false,
         error: 'Please complete the CAPTCHA verification.',
       }, origin);
     }
 
+    console.log('[contact] Verifying Turnstile token...');
     const turnstileValid = await verifyTurnstile(
       turnstileToken,
       clientIP,
@@ -248,27 +257,34 @@ export default {
     );
 
     if (!turnstileValid) {
+      console.log('[contact] Turnstile verification FAILED');
       return jsonResponse(403, {
         success: false,
         error: 'CAPTCHA verification failed. Please try again.',
       }, origin);
     }
+    console.log('[contact] Turnstile verification PASSED');
 
     // Send emails via Resend
     try {
       const resend = new Resend(env.RESEND_API_KEY);
 
       // Send notification to yourself
+      console.log('[contact] Sending notification email...');
       const notificationEmail = buildNotificationEmail(body);
-      await resend.emails.send(notificationEmail);
+      const notifResult = await resend.emails.send(notificationEmail);
+      console.log('[contact] Notification result:', JSON.stringify(notifResult));
 
       // Send auto-reply to visitor
+      console.log('[contact] Sending auto-reply email...');
       const autoReplyEmail = buildAutoReplyEmail(body);
-      await resend.emails.send(autoReplyEmail);
+      const replyResult = await resend.emails.send(autoReplyEmail);
+      console.log('[contact] Auto-reply result:', JSON.stringify(replyResult));
 
+      console.log('[contact] ✅ All emails sent successfully');
       return jsonResponse(200, { success: true }, origin);
     } catch (err) {
-      console.error('Email send failed:', err);
+      console.error('[contact] ❌ Email send failed:', err.message || err);
       return jsonResponse(500, {
         success: false,
         error: 'Something went wrong. Please try again later.',
