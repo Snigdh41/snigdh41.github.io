@@ -1,0 +1,11 @@
+{
+  "name": "contact-api",
+  "main": "src/index.js",
+  "compatibility_date": "2026-04-24",
+  "routes": [
+    {
+      "pattern": "api.snigdhsharma.in",
+      "custom_domain": true
+    }
+  ]
+}

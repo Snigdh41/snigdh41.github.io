@@ -32,6 +32,9 @@ jobs:
 
       - name: Build
         run: npm run build
+        env:
+          NEXT_PUBLIC_TURNSTILE_SITE_KEY: ${{ secrets.NEXT_PUBLIC_TURNSTILE_SITE_KEY }}
+          NEXT_PUBLIC_CONTACT_API_URL: https://api.snigdhsharma.in/contact
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
