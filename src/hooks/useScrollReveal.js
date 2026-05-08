@@ -2,20 +2,18 @@
 
 import { useEffect, useRef } from 'react';
 
-export function useScrollReveal(options = {}) {
+export function useScrollReveal({
+  threshold = 0.15,
+  duration = 800,
+  delay = 0,
+  distance = 30,
+  once = true,
+} = {}) {
   const ref = useRef(null);
 
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-
-    const {
-      threshold = 0.15,
-      duration = 800,
-      delay = 0,
-      distance = 30,
-      once = true,
-    } = options;
 
     el.style.opacity = '0';
     el.style.transform = `translateY(${distance}px)`;
@@ -36,25 +34,23 @@ export function useScrollReveal(options = {}) {
 
     observer.observe(el);
     return () => observer.disconnect();
-  }, [options]);
+  }, [threshold, duration, delay, distance, once]);
 
   return ref;
 }
 
-export function useStaggerReveal(count, options = {}) {
+export function useStaggerReveal(count, {
+  threshold = 0.1,
+  duration = 700,
+  baseDelay = 0,
+  staggerDelay = 100,
+  distance = 40,
+} = {}) {
   const refs = useRef([]);
 
   useEffect(() => {
     const elements = refs.current.filter(Boolean);
     if (elements.length === 0) return;
-
-    const {
-      threshold = 0.1,
-      duration = 700,
-      baseDelay = 0,
-      staggerDelay = 100,
-      distance = 40,
-    } = options;
 
     elements.forEach((el, i) => {
       const delay = baseDelay + i * staggerDelay;
@@ -83,7 +79,7 @@ export function useStaggerReveal(count, options = {}) {
     if (container) observer.observe(container);
 
     return () => observer.disconnect();
-  }, [count, options]);
+  }, [count, threshold, duration, baseDelay, staggerDelay, distance]);
 
   return (index) => (el) => {
     refs.current[index] = el;
