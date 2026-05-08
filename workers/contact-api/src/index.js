@@ -18,10 +18,35 @@ const SENDER_EMAIL = 'contact@snigdhsharma.in';
 const SENDER_NAME = 'Snigdh Sharma';
 
 // ── In-Memory Rate Limiter ─────────────────────────────────────
-const rateLimitMap = new Map();
+export const rateLimitMap = new Map();
+let lastCleanup = Date.now();
+const MAX_MAP_SIZE = 10000;
+const CLEANUP_INTERVAL = 60 * 1000; // 1 minute
 
-function isRateLimited(ip) {
+function cleanupRateLimitMap(now) {
+  for (const [key, value] of rateLimitMap.entries()) {
+    if (now - value.windowStart > RATE_LIMIT_WINDOW_MS) {
+      rateLimitMap.delete(key);
+    }
+  }
+  lastCleanup = now;
+}
+
+export function isRateLimited(ip) {
   const now = Date.now();
+
+  if (now - lastCleanup > CLEANUP_INTERVAL) {
+    cleanupRateLimitMap(now);
+  }
+
+  // Size limit protection to prevent OOM
+  if (rateLimitMap.size >= MAX_MAP_SIZE && !rateLimitMap.has(ip)) {
+    cleanupRateLimitMap(now);
+    if (rateLimitMap.size >= MAX_MAP_SIZE) {
+      rateLimitMap.clear();
+    }
+  }
+
   const entry = rateLimitMap.get(ip);
 
   if (!entry || now - entry.windowStart > RATE_LIMIT_WINDOW_MS) {
