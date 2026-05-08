@@ -1,6 +1,58 @@
 import { test } from 'node:test';
 import assert from 'node:assert';
-import { buildAutoReplyEmail, buildNotificationEmail, sanitize } from './index.js';
+import { buildAutoReplyEmail, buildNotificationEmail, sanitize, isRateLimited, rateLimitMap } from './index.js';
+
+test('isRateLimited() evicts expired items and respects size limits', () => {
+  // Mock Date.now() to control time
+  const originalDateNow = Date.now;
+
+  try {
+    let mockNow = 1000000000000; // Arbitrary start time
+    Date.now = () => mockNow;
+
+    // Clear the map initially to ensure clean state
+    rateLimitMap.clear();
+
+    // 1. Add some initial items
+    isRateLimited('1.1.1.1');
+    isRateLimited('2.2.2.2');
+    assert.strictEqual(rateLimitMap.size, 2);
+
+    // 2. Advance time past the expiration window (15 minutes = 15 * 60 * 1000 ms)
+    mockNow += 16 * 60 * 1000;
+
+    // 3. Trigger eviction (will only clean up during interval checks or max map size, wait we can just add a new item)
+    // The cleanup interval is 1 min (60,000 ms), so mockNow jump of 16 mins > 1 min
+    isRateLimited('3.3.3.3');
+
+    // 1.1.1.1 and 2.2.2.2 should have been evicted, leaving only 3.3.3.3
+    assert.strictEqual(rateLimitMap.size, 1);
+    assert.ok(rateLimitMap.has('3.3.3.3'));
+
+    // 4. Test max size behavior
+    rateLimitMap.clear();
+
+    // Fill up to 10000 (MAX_MAP_SIZE)
+    for (let i = 0; i < 10000; i++) {
+      rateLimitMap.set(`ip-${i}`, { windowStart: mockNow, count: 1 });
+    }
+
+    assert.strictEqual(rateLimitMap.size, 10000);
+
+    // Adding 10001st item should trigger size limit protection
+    // Since none are expired, the map should be cleared entirely to prevent OOM
+    isRateLimited('10001.1.1.1');
+
+    // Map was cleared, then the new item was added
+    assert.strictEqual(rateLimitMap.size, 1);
+    assert.ok(rateLimitMap.has('10001.1.1.1'));
+
+  } finally {
+    // Restore Date.now
+    Date.now = originalDateNow;
+    rateLimitMap.clear();
+  }
+});
 
 test('sanitize() escapes HTML special characters', () => {
   const input = '<b> "Test" & Co. </b>';
