@@ -55,7 +55,7 @@ function corsHeaders(origin) {
 // ── Validation ─────────────────────────────────────────────────
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-function validateBody(body) {
+export function validateBody(body) {
   const errors = [];
 
   if (!body.name || typeof body.name !== 'string' || body.name.trim().length < 2) {
