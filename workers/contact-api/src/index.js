@@ -185,7 +185,7 @@ function buildAutoReplyEmail({ name, email, intent }) {
 }
 
 // ── Main Handler ───────────────────────────────────────────────
-export default {
+const worker = {
   async fetch(request, env) {
     const origin = getCorsOrigin(request);
 
@@ -305,3 +305,4 @@ function jsonResponse(status, data, origin) {
 
   return new Response(JSON.stringify(data), { status, headers });
 }
+export default worker;

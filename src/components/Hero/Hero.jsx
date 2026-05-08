@@ -134,10 +134,6 @@ export default function Hero() {
     return cleanup;
   }, []);
 
-  const setRef = (i) => (el) => {
-    contentRefs.current[i] = el;
-  };
-
   return (
     <section className={styles.hero} ref={heroRef} id="hero">
       {/* Background effects */}
@@ -160,24 +156,24 @@ export default function Hero() {
 
       {/* Content */}
       <div className={styles.content}>
-        <div className={styles.greeting} ref={setRef(0)}>
+        <div className={styles.greeting} ref={(el) => { contentRefs.current[0] = el; }}>
           <span className={styles.greetingLine} />
           Hello, I&apos;m
         </div>
 
-        <h1 className={styles.name} ref={setRef(1)}>
+        <h1 className={styles.name} ref={(el) => { contentRefs.current[1] = el; }}>
           Snigdh <span className={styles.highlight}>Sharma</span>
         </h1>
 
-        <p className={styles.tagline} ref={setRef(2)}>
+        <p className={styles.tagline} ref={(el) => { contentRefs.current[2] = el; }}>
           {personalInfo.tagline}
         </p>
 
-        <p className={styles.role} ref={setRef(3)}>
+        <p className={styles.role} ref={(el) => { contentRefs.current[3] = el; }}>
           <strong>{personalInfo.title}</strong> at <strong>{personalInfo.company}</strong>
         </p>
 
-        <div className={styles.ctas} ref={setRef(4)}>
+        <div className={styles.ctas} ref={(el) => { contentRefs.current[4] = el; }}>
           <a href="#projects" className="btn-primary">
             <Eye size={16} />
             View My Work
@@ -193,7 +189,7 @@ export default function Hero() {
           </a>
         </div>
 
-        <div className={styles.socials} ref={setRef(5)}>
+        <div className={styles.socials} ref={(el) => { contentRefs.current[5] = el; }}>
           <a
             href={personalInfo.socials.linkedin}
             target="_blank"
