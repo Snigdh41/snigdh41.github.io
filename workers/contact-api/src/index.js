@@ -77,7 +77,7 @@ function validateBody(body) {
   return errors;
 }
 
-function sanitize(str) {
+export function sanitize(str) {
   return String(str)
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
@@ -103,7 +103,7 @@ async function verifyTurnstile(token, ip, secretKey) {
 }
 
 // ── Email Templates ────────────────────────────────────────────
-function buildNotificationEmail({ name, email, intent, message }) {
+export function buildNotificationEmail({ name, email, intent, message }) {
   const intentEmoji =
     intent === 'Job Opportunity' ? '💼' :
     intent === 'Collaboration' ? '🤝' : '☕';
@@ -148,11 +148,11 @@ function buildNotificationEmail({ name, email, intent, message }) {
   };
 }
 
-function buildAutoReplyEmail({ name, email, intent }) {
+export function buildAutoReplyEmail({ name, email, intent }) {
   return {
     from: `${SENDER_NAME} <${SENDER_EMAIL}>`,
     to: email,
-    subject: `Thanks for reaching out, ${name}! ☕`,
+    subject: `Thanks for reaching out, ${sanitize(name)}! ☕`,
     html: `
       <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; background: #13131a; border-radius: 16px; overflow: hidden; border: 1px solid #2a2a3a;">
         <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 32px; text-align: center;">
