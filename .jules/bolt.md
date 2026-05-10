@@ -1,0 +1,3 @@
+## 2024-05-10 - Preventing Layout Thrashing on High-Frequency Events
+**Learning:** `mousemove` handlers trigger very frequently, and reading layout properties synchronously (like `getBoundingClientRect()`) causes forced synchronous layout (layout thrashing) and poor performance. This is particularly problematic in React hooks tracking continuous states.
+**Action:** Always wrap synchronous layout property reads within high-frequency event handlers (`mousemove`, `scroll`, `resize`) in `requestAnimationFrame`, and mark such event listeners as `{ passive: true }` to avoid blocking main thread execution, provided default actions aren't prevented.
