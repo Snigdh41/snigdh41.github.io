@@ -1,22 +1,22 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { useScrollReveal, useStaggerReveal } from './useScrollReveal';
+import { useScrollReveal, useStaggerReveal, _clearCache } from './useScrollReveal';
 
 describe('Scroll Reveal Hooks', () => {
   let observeMock;
   let unobserveMock;
   let disconnectMock;
-  let observerCallback;
+  let observerCallbacks;
 
   beforeEach(() => {
     observeMock = jest.fn();
     unobserveMock = jest.fn();
     disconnectMock = jest.fn();
-    observerCallback = null;
+    observerCallbacks = [];
 
     global.IntersectionObserver = class IntersectionObserver {
       constructor(callback) {
-        observerCallback = callback;
+        observerCallbacks.push(callback);
       }
       observe = observeMock;
       unobserve = unobserveMock;
@@ -27,7 +27,12 @@ describe('Scroll Reveal Hooks', () => {
   afterEach(() => {
     jest.restoreAllMocks();
     delete global.IntersectionObserver;
+    _clearCache();
   });
+
+  const triggerIntersection = (entries) => {
+    observerCallbacks.forEach((cb) => cb(entries));
+  };
 
   describe('useScrollReveal', () => {
     function SingleRevealComponent({ options }) {
@@ -53,7 +58,7 @@ describe('Scroll Reveal Hooks', () => {
       const el = screen.getByTestId('single-reveal');
 
       // Trigger intersection
-      observerCallback([{ isIntersecting: true, target: el }]);
+      triggerIntersection([{ isIntersecting: true, target: el }]);
 
       expect(el).toHaveStyle({
         opacity: '1',
@@ -67,7 +72,7 @@ describe('Scroll Reveal Hooks', () => {
       const el = screen.getByTestId('single-reveal');
 
       // Trigger intersection
-      observerCallback([{ isIntersecting: true, target: el }]);
+      triggerIntersection([{ isIntersecting: true, target: el }]);
 
       expect(el).toHaveStyle({
         opacity: '1',
@@ -80,7 +85,7 @@ describe('Scroll Reveal Hooks', () => {
       render(<SingleRevealComponent />);
       const el = screen.getByTestId('single-reveal');
 
-      observerCallback([{ isIntersecting: false, target: el }]);
+      triggerIntersection([{ isIntersecting: false, target: el }]);
 
       expect(el).toHaveStyle({
         opacity: '0',
@@ -91,7 +96,7 @@ describe('Scroll Reveal Hooks', () => {
     it('disconnects on unmount', () => {
       const { unmount } = render(<SingleRevealComponent />);
       unmount();
-      expect(disconnectMock).toHaveBeenCalled();
+      expect(unobserveMock).toHaveBeenCalled();
     });
   });
 
@@ -128,7 +133,7 @@ describe('Scroll Reveal Hooks', () => {
       const container = screen.getByTestId('container');
 
       // Trigger intersection
-      observerCallback([{ isIntersecting: true, target: container }]);
+      triggerIntersection([{ isIntersecting: true, target: container }]);
 
       expect(item0).toHaveStyle({ opacity: '1', transform: 'translateY(0)' });
       expect(item1).toHaveStyle({ opacity: '1', transform: 'translateY(0)' });
@@ -136,10 +141,10 @@ describe('Scroll Reveal Hooks', () => {
       expect(unobserveMock).toHaveBeenCalledWith(container);
     });
 
-    it('disconnects on unmount', () => {
+    it('unobserves on unmount', () => {
       const { unmount } = render(<StaggerComponent count={2} />);
       unmount();
-      expect(disconnectMock).toHaveBeenCalled();
+      expect(unobserveMock).toHaveBeenCalled();
     });
 
     it('does nothing if no elements are rendered', () => {
