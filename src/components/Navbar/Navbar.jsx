@@ -28,24 +28,24 @@ export default function Navbar() {
   /* Intersection Observer for active section */
   useEffect(() => {
     const sectionIds = navLinks.map((l) => l.href.replace('#', ''));
-    const observers = [];
+
+    // ⚡ Bolt: Batch into a single IntersectionObserver instead of creating one per section
+    // This reduces memory overhead and improves performance during scroll events
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) setActiveSection(entry.target.id);
+        });
+      },
+      { rootMargin: '-40% 0px -55% 0px' }
+    );
 
     sectionIds.forEach((id) => {
       const el = document.getElementById(id);
-      if (!el) return;
-
-      const observer = new IntersectionObserver(
-        ([entry]) => {
-          if (entry.isIntersecting) setActiveSection(id);
-        },
-        { rootMargin: '-40% 0px -55% 0px' }
-      );
-
-      observer.observe(el);
-      observers.push(observer);
+      if (el) observer.observe(el);
     });
 
-    return () => observers.forEach((o) => o.disconnect());
+    return () => observer.disconnect();
   }, []);
 
   const handleNavClick = () => setMenuOpen(false);
