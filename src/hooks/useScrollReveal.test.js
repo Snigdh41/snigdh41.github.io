@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { useScrollReveal, useStaggerReveal } from './useScrollReveal';
+import { useScrollReveal, useStaggerReveal, clearObservers } from './useScrollReveal';
 
 describe('Scroll Reveal Hooks', () => {
   let observeMock;
@@ -26,6 +26,7 @@ describe('Scroll Reveal Hooks', () => {
 
   afterEach(() => {
     jest.restoreAllMocks();
+    clearObservers();
     delete global.IntersectionObserver;
   });
 
@@ -91,7 +92,7 @@ describe('Scroll Reveal Hooks', () => {
     it('disconnects on unmount', () => {
       const { unmount } = render(<SingleRevealComponent />);
       unmount();
-      expect(disconnectMock).toHaveBeenCalled();
+      expect(unobserveMock).toHaveBeenCalled();
     });
   });
 
@@ -139,7 +140,7 @@ describe('Scroll Reveal Hooks', () => {
     it('disconnects on unmount', () => {
       const { unmount } = render(<StaggerComponent count={2} />);
       unmount();
-      expect(disconnectMock).toHaveBeenCalled();
+      expect(unobserveMock).toHaveBeenCalled();
     });
 
     it('does nothing if no elements are rendered', () => {
