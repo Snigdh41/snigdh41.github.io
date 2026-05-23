@@ -5,6 +5,9 @@ import { Download } from 'lucide-react';
 import { navLinks, personalInfo } from '@/data/content';
 import styles from './Navbar.module.css';
 
+// ⚡ Bolt: Move static nav links mapping outside component to prevent recalculation on render/effect initialization
+const sectionIds = navLinks.map((l) => l.href.replace('#', ''));
+
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -27,8 +30,6 @@ export default function Navbar() {
 
   /* Intersection Observer for active section */
   useEffect(() => {
-    const sectionIds = navLinks.map((l) => l.href.replace('#', ''));
-
     // ⚡ Bolt: Batch into a single IntersectionObserver instead of creating one per section
     // This reduces memory overhead and improves performance during scroll events
     const observer = new IntersectionObserver(
@@ -59,12 +60,12 @@ export default function Navbar() {
           </a>
 
           <div className={styles.links}>
-            {navLinks.map((link) => (
+            {navLinks.map((link, index) => (
               <a
                 key={link.href}
                 href={link.href}
                 className={`${styles.link} ${
-                  activeSection === link.href.replace('#', '') ? styles.active : ''
+                  activeSection === sectionIds[index] ? styles.active : ''
                 }`}
               >
                 {link.label}
