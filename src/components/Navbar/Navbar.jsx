@@ -5,6 +5,12 @@ import { Download } from 'lucide-react';
 import { navLinks, personalInfo } from '@/data/content';
 import styles from './Navbar.module.css';
 
+// ⚡ Bolt: Extract static array mapping outside component to prevent unnecessary recalculation on every render
+const NAV_ITEMS = navLinks.map(link => ({
+  ...link,
+  id: link.href.replace('#', '')
+}));
+
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -27,10 +33,6 @@ export default function Navbar() {
 
   /* Intersection Observer for active section */
   useEffect(() => {
-    const sectionIds = navLinks.map((l) => l.href.replace('#', ''));
-
-    // ⚡ Bolt: Batch into a single IntersectionObserver instead of creating one per section
-    // This reduces memory overhead and improves performance during scroll events
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -40,7 +42,7 @@ export default function Navbar() {
       { rootMargin: '-40% 0px -55% 0px' }
     );
 
-    sectionIds.forEach((id) => {
+    NAV_ITEMS.forEach(({ id }) => {
       const el = document.getElementById(id);
       if (el) observer.observe(el);
     });
@@ -59,15 +61,15 @@ export default function Navbar() {
           </a>
 
           <div className={styles.links}>
-            {navLinks.map((link) => (
+            {NAV_ITEMS.map((item) => (
               <a
-                key={link.href}
-                href={link.href}
+                key={item.href}
+                href={item.href}
                 className={`${styles.link} ${
-                  activeSection === link.href.replace('#', '') ? styles.active : ''
+                  activeSection === item.id ? styles.active : ''
                 }`}
               >
-                {link.label}
+                {item.label}
               </a>
             ))}
           </div>
@@ -96,14 +98,14 @@ export default function Navbar() {
 
       {/* Mobile Menu */}
       <div className={`${styles.mobileMenu} ${menuOpen ? styles.open : ''}`}>
-        {navLinks.map((link) => (
+        {NAV_ITEMS.map((item) => (
           <a
-            key={link.href}
-            href={link.href}
+            key={item.href}
+            href={item.href}
             className={styles.mobileLink}
             onClick={handleNavClick}
           >
-            {link.label}
+            {item.label}
           </a>
         ))}
         <a
