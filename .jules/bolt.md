@@ -9,3 +9,6 @@
 ## 2026-05-13 - Global Observer Caching
 **Learning:** Instantiating multiple IntersectionObserver instances for common interactions (like scroll reveals on multiple components) creates unnecessary memory overhead.
 **Action:** Use a module-level `Map` to cache IntersectionObserver instances by their configuration (like `threshold`), and a `WeakMap` to store per-element callbacks. This heavily reduces object creation and memory overhead by allowing multiple elements to share a single observer under the hood.
+## 2026-05-14 - Extracting Static Map Computations Outside React Components
+**Learning:** Mapping static data arrays (e.g., `navLinks.map`) inside a React component causes the array and its object elements to be re-created on every single render. When rendering logic involves string manipulation (like `.replace('#', '')`), this adds unnecessary CPU cycles and memory garbage collection overhead on high-frequency state updates like scroll events.
+**Action:** Extract static array mappings to the module scope (outside the React component) to ensure the calculation is executed only once when the module loads, improving runtime performance and preventing unnecessary object instantiation during React renders.
