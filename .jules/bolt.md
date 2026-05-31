@@ -9,3 +9,7 @@
 ## 2026-05-13 - Global Observer Caching
 **Learning:** Instantiating multiple IntersectionObserver instances for common interactions (like scroll reveals on multiple components) creates unnecessary memory overhead.
 **Action:** Use a module-level `Map` to cache IntersectionObserver instances by their configuration (like `threshold`), and a `WeakMap` to store per-element callbacks. This heavily reduces object creation and memory overhead by allowing multiple elements to share a single observer under the hood.
+
+## 2024-05-31 - [next/font/google Integration for Performance]
+**Learning:** This Next.js codebase previously loaded external Google Fonts via blocking `@import` in CSS. Replacing it with `next/font/google` statically built and self-hosted the fonts, eliminating third-party DNS lookups and eliminating layout shifts (using `display: 'swap'`).
+**Action:** Always check the `globals.css` and `layout.js` of Next.js projects for third-party typography loading; migrating to `next/font` is a near-universal high-ROI optimization. Ensure variables mapped from `next/font` are bound correctly in custom CSS properties.
