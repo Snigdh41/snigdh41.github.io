@@ -5,6 +5,12 @@ import { Download } from 'lucide-react';
 import { navLinks, personalInfo } from '@/data/content';
 import styles from './Navbar.module.css';
 
+// ⚡ Bolt: Extract static navLinks mapping to module scope to avoid re-calculating on every render
+const processedNavLinks = navLinks.map((link) => ({
+  ...link,
+  id: link.href.replace('#', ''),
+}));
+
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -27,8 +33,6 @@ export default function Navbar() {
 
   /* Intersection Observer for active section */
   useEffect(() => {
-    const sectionIds = navLinks.map((l) => l.href.replace('#', ''));
-
     // ⚡ Bolt: Batch into a single IntersectionObserver instead of creating one per section
     // This reduces memory overhead and improves performance during scroll events
     const observer = new IntersectionObserver(
@@ -40,7 +44,7 @@ export default function Navbar() {
       { rootMargin: '-40% 0px -55% 0px' }
     );
 
-    sectionIds.forEach((id) => {
+    processedNavLinks.forEach(({ id }) => {
       const el = document.getElementById(id);
       if (el) observer.observe(el);
     });
@@ -59,12 +63,12 @@ export default function Navbar() {
           </a>
 
           <div className={styles.links}>
-            {navLinks.map((link) => (
+            {processedNavLinks.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
                 className={`${styles.link} ${
-                  activeSection === link.href.replace('#', '') ? styles.active : ''
+                  activeSection === link.id ? styles.active : ''
                 }`}
               >
                 {link.label}
@@ -96,7 +100,7 @@ export default function Navbar() {
 
       {/* Mobile Menu */}
       <div className={`${styles.mobileMenu} ${menuOpen ? styles.open : ''}`}>
-        {navLinks.map((link) => (
+        {processedNavLinks.map((link) => (
           <a
             key={link.href}
             href={link.href}
