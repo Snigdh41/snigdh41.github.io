@@ -5,6 +5,13 @@ import { Download } from 'lucide-react';
 import { navLinks, personalInfo } from '@/data/content';
 import styles from './Navbar.module.css';
 
+// ⚡ Bolt: Pre-calculate derived data outside component to avoid recalculation on every render
+const sectionIds = navLinks.map((l) => l.href.replace('#', ''));
+const processedNavLinks = navLinks.map((link) => ({
+  ...link,
+  sectionId: link.href.replace('#', '')
+}));
+
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -27,8 +34,6 @@ export default function Navbar() {
 
   /* Intersection Observer for active section */
   useEffect(() => {
-    const sectionIds = navLinks.map((l) => l.href.replace('#', ''));
-
     // ⚡ Bolt: Batch into a single IntersectionObserver instead of creating one per section
     // This reduces memory overhead and improves performance during scroll events
     const observer = new IntersectionObserver(
@@ -59,12 +64,12 @@ export default function Navbar() {
           </a>
 
           <div className={styles.links}>
-            {navLinks.map((link) => (
+            {processedNavLinks.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
                 className={`${styles.link} ${
-                  activeSection === link.href.replace('#', '') ? styles.active : ''
+                  activeSection === link.sectionId ? styles.active : ''
                 }`}
               >
                 {link.label}
@@ -96,7 +101,7 @@ export default function Navbar() {
 
       {/* Mobile Menu */}
       <div className={`${styles.mobileMenu} ${menuOpen ? styles.open : ''}`}>
-        {navLinks.map((link) => (
+        {processedNavLinks.map((link) => (
           <a
             key={link.href}
             href={link.href}
