@@ -2,9 +2,6 @@
    DESIGN SYSTEM — snigdhsharma.in
    ============================================ */
 
-/* ---------- Google Fonts ---------- */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
-
 /* ---------- CSS Custom Properties ---------- */
 :root {
   /* Colors */
@@ -33,8 +30,8 @@
   --gradient-text: linear-gradient(135deg, #818cf8 0%, #c084fc 50%, #818cf8 100%);
 
   /* Typography */
-  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-heading: 'Space Grotesk', 'Inter', sans-serif;
+  --font-body-family: var(--font-body), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-heading-family: var(--font-heading), var(--font-body-family);
 
   --text-xs: 0.75rem;
   --text-sm: 0.875rem;
@@ -102,7 +99,7 @@ html {
 }
 
 body {
-  font-family: var(--font-body);
+  font-family: var(--font-body-family);
   font-size: var(--text-base);
   line-height: 1.7;
   color: var(--text-primary);
@@ -157,7 +154,7 @@ button {
 
 /* ---------- Base Typography ---------- */
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-heading);
+  font-family: var(--font-heading-family);
   font-weight: 600;
   line-height: 1.2;
   color: var(--text-primary);
@@ -179,7 +176,7 @@ h1, h2, h3, h4, h5, h6 {
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
-  font-family: var(--font-body);
+  font-family: var(--font-body-family);
   font-size: var(--text-sm);
   font-weight: 500;
   color: var(--color-primary);
