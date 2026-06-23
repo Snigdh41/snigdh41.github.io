@@ -18,7 +18,7 @@ export default function Navbar() {
 
   /* Intersection Observer for active section */
   useEffect(() => {
-    const sectionIds = navLinks.map((l) => l.href.replace('#', ''));
+    const sectionIds = navLinks.map((l) => l.href.split('#')[1]);
     const observers = [];
 
     sectionIds.forEach((id) => {
@@ -45,7 +45,7 @@ export default function Navbar() {
     <>
       <nav className={`${styles.nav} ${scrolled ? styles.scrolled : ''}`}>
         <div className={styles.navInner}>
-          <a href="#" className={styles.logo}>
+          <a href="/" className={styles.logo}>
             S<span>.</span>
           </a>
 
@@ -55,7 +55,7 @@ export default function Navbar() {
                 key={link.href}
                 href={link.href}
                 className={`${styles.link} ${
-                  activeSection === link.href.replace('#', '') ? styles.active : ''
+                  activeSection === link.href.split('#')[1] ? styles.active : ''
                 }`}
               >
                 {link.label}
