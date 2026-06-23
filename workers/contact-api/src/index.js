@@ -18,10 +18,35 @@ const SENDER_EMAIL = 'contact@snigdhsharma.in';
 const SENDER_NAME = 'Snigdh Sharma';
 
 // ── In-Memory Rate Limiter ─────────────────────────────────────
-const rateLimitMap = new Map();
+export const rateLimitMap = new Map();
+let lastCleanup = Date.now();
+const MAX_MAP_SIZE = 10000;
+const CLEANUP_INTERVAL = 60 * 1000; // 1 minute
 
-function isRateLimited(ip) {
+function cleanupRateLimitMap(now) {
+  for (const [key, value] of rateLimitMap.entries()) {
+    if (now - value.windowStart > RATE_LIMIT_WINDOW_MS) {
+      rateLimitMap.delete(key);
+    }
+  }
+  lastCleanup = now;
+}
+
+export function isRateLimited(ip) {
   const now = Date.now();
+
+  if (now - lastCleanup > CLEANUP_INTERVAL) {
+    cleanupRateLimitMap(now);
+  }
+
+  // Size limit protection to prevent OOM
+  if (rateLimitMap.size >= MAX_MAP_SIZE && !rateLimitMap.has(ip)) {
+    cleanupRateLimitMap(now);
+    if (rateLimitMap.size >= MAX_MAP_SIZE) {
+      rateLimitMap.clear();
+    }
+  }
+
   const entry = rateLimitMap.get(ip);
 
   if (!entry || now - entry.windowStart > RATE_LIMIT_WINDOW_MS) {
@@ -77,7 +102,7 @@ function validateBody(body) {
   return errors;
 }
 
-function sanitize(str) {
+export function sanitize(str) {
   return String(str)
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
@@ -103,7 +128,7 @@ async function verifyTurnstile(token, ip, secretKey) {
 }
 
 // ── Email Templates ────────────────────────────────────────────
-function buildNotificationEmail({ name, email, intent, message }) {
+export function buildNotificationEmail({ name, email, intent, message }) {
   const intentEmoji =
     intent === 'Job Opportunity' ? '💼' :
     intent === 'Collaboration' ? '🤝' : '☕';
@@ -148,11 +173,11 @@ function buildNotificationEmail({ name, email, intent, message }) {
   };
 }
 
-function buildAutoReplyEmail({ name, email, intent }) {
+export function buildAutoReplyEmail({ name, email, intent }) {
   return {
     from: `${SENDER_NAME} <${SENDER_EMAIL}>`,
     to: email,
-    subject: `Thanks for reaching out, ${name}! ☕`,
+    subject: `Thanks for reaching out, ${sanitize(name)}! ☕`,
     html: `
       <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; background: #13131a; border-radius: 16px; overflow: hidden; border: 1px solid #2a2a3a;">
         <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 32px; text-align: center;">
@@ -185,7 +210,7 @@ function buildAutoReplyEmail({ name, email, intent }) {
 }
 
 // ── Main Handler ───────────────────────────────────────────────
-export default {
+const worker = {
   async fetch(request, env) {
     const origin = getCorsOrigin(request);
 
@@ -305,3 +330,4 @@ function jsonResponse(status, data, origin) {
 
   return new Response(JSON.stringify(data), { status, headers });
 }
+export default worker;

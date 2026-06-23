@@ -11,32 +11,41 @@ export default function Navbar() {
   const [activeSection, setActiveSection] = useState('');
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 50);
+    let ticking = false;
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setScrolled(window.scrollY > 50);
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   /* Intersection Observer for active section */
   useEffect(() => {
-    const sectionIds = navLinks.map((l) => l.href.split('#')[1]);
-    const observers = [];
+    const sectionIds = navLinks.map((l) => l.href.replace('#', ''));
+
+    // ⚡ Bolt: Batch into a single IntersectionObserver instead of creating one per section
+    // This reduces memory overhead and improves performance during scroll events
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) setActiveSection(entry.target.id);
+        });
+      },
+      { rootMargin: '-40% 0px -55% 0px' }
+    );
 
     sectionIds.forEach((id) => {
       const el = document.getElementById(id);
-      if (!el) return;
-
-      const observer = new IntersectionObserver(
-        ([entry]) => {
-          if (entry.isIntersecting) setActiveSection(id);
-        },
-        { rootMargin: '-40% 0px -55% 0px' }
-      );
-
-      observer.observe(el);
-      observers.push(observer);
+      if (el) observer.observe(el);
     });
 
-    return () => observers.forEach((o) => o.disconnect());
+    return () => observer.disconnect();
   }, []);
 
   const handleNavClick = () => setMenuOpen(false);
@@ -54,9 +63,8 @@ export default function Navbar() {
               <a
                 key={link.href}
                 href={link.href}
-                className={`${styles.link} ${
-                  activeSection === link.href.split('#')[1] ? styles.active : ''
-                }`}
+                className={`${styles.link} ${activeSection === link.href.split('#')[1] ? styles.active : ''
+                  }`}
               >
                 {link.label}
               </a>
