@@ -2,7 +2,21 @@
 
 import { personalInfo } from '@/data/content';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
+import { useCountUp } from '@/hooks/useCountUp';
 import styles from './About.module.css';
+
+function AnimatedStat({ target, suffix = '', label }) {
+  const [ref, value] = useCountUp(target, { duration: 1800 });
+
+  return (
+    <div className={styles.stat} ref={ref}>
+      <span className={styles.statNumber}>
+        {value}{suffix}
+      </span>
+      <span className={styles.statLabel}>{label}</span>
+    </div>
+  );
+}
 
 export default function About() {
   const sectionRef = useScrollReveal({ duration: 800 });
@@ -20,18 +34,9 @@ export default function About() {
             <p className={styles.bio}>{personalInfo.bio}</p>
 
             <div className={styles.stats}>
-              <div className={styles.stat}>
-                <span className={styles.statNumber}>3+</span>
-                <span className={styles.statLabel}>Years Experience</span>
-              </div>
-              <div className={styles.stat}>
-                <span className={styles.statNumber}>3</span>
-                <span className={styles.statLabel}>Enterprise Projects</span>
-              </div>
-              <div className={styles.stat}>
-                <span className={styles.statNumber}>10+</span>
-                <span className={styles.statLabel}>Technologies</span>
-              </div>
+              <AnimatedStat target={3} suffix="+" label="Years Experience" />
+              <AnimatedStat target={3} suffix="" label="Enterprise Projects" />
+              <AnimatedStat target={10} suffix="+" label="Technologies" />
             </div>
           </div>
 

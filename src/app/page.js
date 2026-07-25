@@ -1,4 +1,5 @@
 import Navbar from '@/components/Navbar/Navbar';
+import ProgressBar from '@/components/ProgressBar/ProgressBar';
 import Hero from '@/components/Hero/Hero';
 import About from '@/components/About/About';
 import Skills from '@/components/Skills/Skills';
@@ -15,6 +16,7 @@ export default function Home() {
   return (
     <>
       <Navbar />
+      <ProgressBar />
       <main>
         <Hero />
         <About />
