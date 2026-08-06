@@ -294,16 +294,17 @@ const worker = {
     try {
       const resend = new Resend(env.RESEND_API_KEY);
 
-      // Send notification to yourself
-      console.log('[contact] Sending notification email...');
+      // ⚡ Bolt: Execute independent network requests concurrently to reduce overall worker execution time
+      console.log('[contact] Sending notification and auto-reply emails concurrently...');
       const notificationEmail = buildNotificationEmail(body);
-      const notifResult = await resend.emails.send(notificationEmail);
-      console.log('[contact] Notification result:', JSON.stringify(notifResult));
-
-      // Send auto-reply to visitor
-      console.log('[contact] Sending auto-reply email...');
       const autoReplyEmail = buildAutoReplyEmail(body);
-      const replyResult = await resend.emails.send(autoReplyEmail);
+
+      const [notifResult, replyResult] = await Promise.all([
+        resend.emails.send(notificationEmail),
+        resend.emails.send(autoReplyEmail),
+      ]);
+
+      console.log('[contact] Notification result:', JSON.stringify(notifResult));
       console.log('[contact] Auto-reply result:', JSON.stringify(replyResult));
 
       console.log('[contact] ✅ All emails sent successfully');
