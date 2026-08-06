@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { Download } from 'lucide-react';
 import { navLinks, personalInfo } from '@/data/content';
 import styles from './Navbar.module.css';
@@ -54,9 +55,9 @@ export default function Navbar() {
     <>
       <nav className={`${styles.nav} ${scrolled ? styles.scrolled : ''}`}>
         <div className={styles.navInner}>
-          <a href="/" className={styles.logo}>
+          <Link href="/" className={styles.logo}>
             S<span>.</span>
-          </a>
+          </Link>
 
           <div className={styles.links}>
             {navLinks.map((link) => (
