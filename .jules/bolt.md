@@ -9,3 +9,7 @@
 ## 2026-05-13 - Global Observer Caching
 **Learning:** Instantiating multiple IntersectionObserver instances for common interactions (like scroll reveals on multiple components) creates unnecessary memory overhead.
 **Action:** Use a module-level `Map` to cache IntersectionObserver instances by their configuration (like `threshold`), and a `WeakMap` to store per-element callbacks. This heavily reduces object creation and memory overhead by allowing multiple elements to share a single observer under the hood.
+
+## 2026-05-13 - Concurrent Backend Fetch Requests
+**Learning:** Sequential await calls for independent external network requests (like sending notification and auto-reply emails) artificially inflate backend execution latency.
+**Action:** Always dispatch independent asynchronous operations concurrently using `Promise.all` to reduce overall wait time to the duration of the single slowest request.
