@@ -9,3 +9,7 @@
 ## 2026-05-13 - Global Observer Caching
 **Learning:** Instantiating multiple IntersectionObserver instances for common interactions (like scroll reveals on multiple components) creates unnecessary memory overhead.
 **Action:** Use a module-level `Map` to cache IntersectionObserver instances by their configuration (like `threshold`), and a `WeakMap` to store per-element callbacks. This heavily reduces object creation and memory overhead by allowing multiple elements to share a single observer under the hood.
+
+## 2026-06-01 - Concurrent External API Requests
+**Learning:** Making sequential external HTTP requests in Cloudflare Workers (like sending multiple emails or fetching data) causes latency to accumulate, resulting in longer overall execution times and unnecessary delays for the end-user.
+**Action:** Always use `Promise.all()` to execute independent external network requests concurrently. This significantly reduces overall latency and ensures a faster response.
