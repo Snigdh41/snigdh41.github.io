@@ -1,38 +1,12 @@
 'use client';
 
 import { useState, useRef } from 'react';
-import { Mail, Send, Coffee, CheckCircle, AlertCircle } from 'lucide-react';
+import { Send, Coffee, CheckCircle, AlertCircle } from 'lucide-react';
 import { Turnstile } from '@marsidev/react-turnstile';
-import { personalInfo } from '@/data/content';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
-import { GithubIcon, LinkedinIcon } from '@/components/Icons/BrandIcons';
 import styles from './Contact.module.css';
 
 /* ── Contact cards data ──────────────────────────────────────── */
-const contactItems = [
-  {
-    icon: Mail,
-    label: 'Email',
-    value: 'contact@snigdhsharma.in',
-    href: 'mailto:contact@snigdhsharma.in',
-    isBrand: false,
-  },
-  {
-    icon: LinkedinIcon,
-    label: 'LinkedIn',
-    value: 'snigdh-sharma',
-    href: personalInfo.socials.linkedin,
-    isBrand: true,
-  },
-  {
-    icon: GithubIcon,
-    label: 'GitHub',
-    value: 'Snigdh41',
-    href: personalInfo.socials.github,
-    isBrand: true,
-  },
-];
-
 /* ── Intent options ──────────────────────────────────────────── */
 const INTENT_OPTIONS = [
   { value: '', label: 'What brings you here?' },
@@ -50,30 +24,11 @@ const TURNSTILE_SITE_KEY =
 
 /* ── Main Component ──────────────────────────────────────────── */
 export default function Contact() {
-  const headerRef = useScrollReveal({ duration: 800 });
   const formRef = useScrollReveal({ duration: 700, delay: 200 });
 
   return (
     <section className={`section ${styles.contact}`} id="contact">
       <div className="container">
-        <div className={styles.header} ref={headerRef}>
-          <span className="section-label">Contact</span>
-          <h2 className="section-title">
-            Let&apos;s <span className="gradient-text">Connect</span>
-          </h2>
-        </div>
-
-        <p className={styles.subtitle}>
-          Have a project in mind, a role to discuss, or just want to talk tech?
-          Grab a virtual coffee with me ☕
-        </p>
-
-        <div className={styles.grid}>
-          {contactItems.map((item, i) => (
-            <ContactCard key={item.label} item={item} index={i} />
-          ))}
-        </div>
-
         <div className={styles.formSection} ref={formRef}>
           <div className={styles.formHeader}>
             <Coffee size={20} className={styles.formHeaderIcon} />
@@ -83,28 +38,6 @@ export default function Contact() {
         </div>
       </div>
     </section>
-  );
-}
-
-/* ── Contact Card ────────────────────────────────────────────── */
-function ContactCard({ item, index }) {
-  const ref = useScrollReveal({ duration: 700, delay: index * 100 });
-  const Icon = item.icon;
-
-  return (
-    <a
-      href={item.href}
-      target={item.href.startsWith('mailto') ? undefined : '_blank'}
-      rel="noopener noreferrer"
-      className={`glass glass-hover ${styles.contactCard}`}
-      ref={ref}
-    >
-      <div className={styles.contactIcon}>
-        {item.isBrand ? <Icon size={24} /> : <Icon size={24} />}
-      </div>
-      <span className={styles.contactLabel}>{item.label}</span>
-      <span className={styles.contactValue}>{item.value}</span>
-    </a>
   );
 }
 
@@ -283,7 +216,7 @@ function CoffeeChatForm() {
           onError={() => setTurnstileToken(null)}
           onExpire={() => setTurnstileToken(null)}
           options={{
-            theme: 'dark',
+            theme: 'light',
             size: 'flexible',
           }}
         />

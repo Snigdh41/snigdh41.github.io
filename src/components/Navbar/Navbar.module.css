@@ -12,7 +12,7 @@
 }
 
 .nav.scrolled {
-  background: rgba(10, 10, 15, 0.85);
+  background: rgba(246, 241, 232, 0.82);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--border-subtle);
@@ -29,7 +29,8 @@
 
 .logo {
   font-family: var(--font-heading);
-  font-size: var(--text-xl);
+  font-size: 1.4rem;
+  letter-spacing: -0.06em;
   font-weight: 700;
   color: var(--text-primary);
   cursor: pointer;
@@ -56,13 +57,13 @@
   font-size: var(--text-sm);
   font-weight: 500;
   color: var(--text-secondary);
-  border-radius: var(--radius-sm);
+  border-radius: 8px;
   transition: all var(--transition-fast);
 }
 
 .link:hover {
   color: var(--text-primary);
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(196, 93, 61, 0.07);
 }
 
 .link.active {
