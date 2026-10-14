@@ -54,10 +54,26 @@ export async function generateMetadata({ params }) {
   };
 }
 
+function headingId(text) {
+  return text
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
 function Block({ block }) {
   switch (block.type) {
     case "h2":
-      return <h2>{block.text}</h2>;
+      return <h2 id={headingId(block.text)}>{block.text}</h2>;
+    case "code":
+      return (
+        <figure className={styles.code}>
+          <figcaption>{block.language} · Illustrative example</figcaption>
+          <pre>
+            <code>{block.text}</code>
+          </pre>
+        </figure>
+      );
     case "quote":
       return <blockquote className={styles.quote}>{block.text}</blockquote>;
     case "ul":
@@ -89,7 +105,11 @@ export default async function ArticlePage({ params }) {
     headline: post.title,
     description,
     datePublished: post.dateISO,
-    dateModified: post.dateISO,
+    dateModified: post.updatedISO || post.dateISO,
+    inLanguage: "en",
+    ...(post.sources
+      ? { citation: post.sources.map((source) => source.url) }
+      : {}),
     articleSection: post.category,
     keywords: post.tags.join(", "),
     author: {
@@ -116,7 +136,7 @@ export default async function ArticlePage({ params }) {
       <Navbar />
       <div className={styles.wrapper}>
         <article id="main-content" className={styles.article}>
-          <Link href="/#insights" className={styles.backLink}>
+          <Link href="/insights" className={styles.backLink}>
             <ArrowLeft size={16} />
             Back to Insights
           </Link>
@@ -124,19 +144,62 @@ export default async function ArticlePage({ params }) {
           <div className={styles.meta}>
             <span className="tech-tag">{post.category}</span>
             <span className={styles.metaDot} />
-            <span>{post.date}</span>
+            <time dateTime={post.dateISO}>{post.date}</time>
             <span className={styles.metaDot} />
             <span>{post.readTime}</span>
           </div>
 
           <h1 className={styles.title}>{post.title}</h1>
+          <p className={styles.byline}>
+            By <Link href="/#about">{personalInfo.name}</Link> · Software
+            engineering, cloud &amp; data
+          </p>
           <p className={styles.excerpt}>{post.excerpt}</p>
+
+          {post.summary && (
+            <aside className={styles.takeaway}>
+              <strong>At a glance</strong>
+              <p>{post.summary}</p>
+            </aside>
+          )}
+          {post.editorialNote && (
+            <p className={styles.editorial}>{post.editorialNote}</p>
+          )}
+          <nav className={styles.toc} aria-label="On this page">
+            <strong>On this page</strong>
+            <ol>
+              {post.content
+                .filter((block) => block.type === "h2")
+                .map((block) => (
+                  <li key={block.text}>
+                    <a href={`#${headingId(block.text)}`}>{block.text}</a>
+                  </li>
+                ))}
+            </ol>
+          </nav>
 
           <div className={styles.body}>
             {post.content.map((block, i) => (
               <Block key={i} block={block} />
             ))}
           </div>
+
+          {post.sources && (
+            <section className={styles.sources} aria-labelledby="sources-title">
+              <h2 id="sources-title">Sources &amp; further reading</h2>
+              <p>
+                Sources checked on October 14, 2026. Product capabilities may
+                change; consult the linked documentation before implementation.
+              </p>
+              <ul>
+                {post.sources.map((source) => (
+                  <li key={source.url}>
+                    <a href={source.url}>{source.title} ↗</a>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
 
           <div className={styles.tags}>
             {post.tags.map((tag) => (

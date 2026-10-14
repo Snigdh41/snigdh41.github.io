@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "jest"
+    "test": "jest",
+    "test:seo": "node scripts/check-seo.mjs"
   },
   "dependencies": {
     "@marsidev/react-turnstile": "^1.5.0",

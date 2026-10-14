@@ -260,7 +260,7 @@ export default function Home() {
               and making useful things.
             </p>
           </div>
-          {insights.map((p) => (
+          {insights.slice(0, 3).map((p) => (
             <Link
               key={p.slug}
               href={`/insights/${p.slug}/`}
@@ -280,6 +280,14 @@ export default function Home() {
             </Link>
           ))}
         </section>
+        <div className={s.actions} style={{ padding: "24px 0" }}>
+          <Link className="btn-secondary" href="/insights">
+            Browse all engineering notes ↗
+          </Link>
+          <a className={s.textLink} href="/feed.xml">
+            RSS feed ↗
+          </a>
+        </div>
         <section id="tech-radar" className={`${s.section} ${s.now}`}>
           <div>
             <span className={s.kicker}>ON MY RADAR</span>

@@ -1,3 +1,5 @@
+import { newInsights } from './newInsights';
+
 export const personalInfo = {
   name: 'Snigdh Sharma',
   title: 'Data Analyst',
@@ -157,6 +159,7 @@ export const techRadar = {
 
 /* ---------- Insights / Writing ---------- */
 export const insights = [
+  ...newInsights,
   {
     slug: 'from-dashboards-to-decisions',
     category: 'Data Strategy',
