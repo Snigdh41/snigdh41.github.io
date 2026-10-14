@@ -1,33 +1,33 @@
-'use client';
+"use client";
 
-import { useState, useRef } from 'react';
-import { Mail, Send, Coffee, CheckCircle, AlertCircle } from 'lucide-react';
-import { Turnstile } from '@marsidev/react-turnstile';
-import { personalInfo } from '@/data/content';
-import { useScrollReveal } from '@/hooks/useScrollReveal';
-import { GithubIcon, LinkedinIcon } from '@/components/Icons/BrandIcons';
-import styles from './Contact.module.css';
+import { useState, useRef } from "react";
+import { Mail, Send, Coffee, CheckCircle, AlertCircle } from "lucide-react";
+import { Turnstile } from "@marsidev/react-turnstile";
+import { personalInfo } from "@/data/content";
+import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { GithubIcon, LinkedinIcon } from "@/components/Icons/BrandIcons";
+import styles from "./Contact.module.css";
 
 /* ── Contact cards data ──────────────────────────────────────── */
 const contactItems = [
   {
     icon: Mail,
-    label: 'Email',
-    value: 'contact@snigdhsharma.in',
-    href: 'mailto:contact@snigdhsharma.in',
+    label: "Email",
+    value: "contact@snigdhsharma.in",
+    href: "mailto:contact@snigdhsharma.in",
     isBrand: false,
   },
   {
     icon: LinkedinIcon,
-    label: 'LinkedIn',
-    value: 'snigdh-sharma',
+    label: "LinkedIn",
+    value: "snigdh-sharma",
     href: personalInfo.socials.linkedin,
     isBrand: true,
   },
   {
     icon: GithubIcon,
-    label: 'GitHub',
-    value: 'Snigdh41',
+    label: "GitHub",
+    value: "Snigdh41",
     href: personalInfo.socials.github,
     isBrand: true,
   },
@@ -35,18 +35,19 @@ const contactItems = [
 
 /* ── Intent options ──────────────────────────────────────────── */
 const INTENT_OPTIONS = [
-  { value: '', label: 'What brings you here?' },
-  { value: 'Job Opportunity', label: '💼 Job Opportunity' },
-  { value: 'Collaboration', label: '🤝 Collaboration' },
-  { value: 'Just Vibes ☕', label: '☕ Just Vibes' },
+  { value: "", label: "What brings you here?" },
+  { value: "Job Opportunity", label: "💼 Job Opportunity" },
+  { value: "Collaboration", label: "🤝 Collaboration" },
+  { value: "Just Vibes ☕", label: "☕ Just Vibes" },
 ];
 
 /* ── API URL ─────────────────────────────────────────────────── */
 const CONTACT_API_URL =
-  process.env.NEXT_PUBLIC_CONTACT_API_URL || 'https://api.snigdhsharma.in/contact';
+  process.env.NEXT_PUBLIC_CONTACT_API_URL ||
+  "https://api.snigdhsharma.in/contact";
 
 const TURNSTILE_SITE_KEY =
-  process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || '1x00000000000000000000AA'; // test key fallback
+  process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "1x00000000000000000000AA"; // test key fallback
 
 /* ── Main Component ──────────────────────────────────────────── */
 export default function Contact() {
@@ -94,7 +95,7 @@ function ContactCard({ item, index }) {
   return (
     <a
       href={item.href}
-      target={item.href.startsWith('mailto') ? undefined : '_blank'}
+      target={item.href.startsWith("mailto") ? undefined : "_blank"}
       rel="noopener noreferrer"
       className={`glass glass-hover ${styles.contactCard}`}
       ref={ref}
@@ -111,13 +112,13 @@ function ContactCard({ item, index }) {
 /* ── Coffee Chat Form ────────────────────────────────────────── */
 function CoffeeChatForm() {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    intent: '',
-    message: '',
+    name: "",
+    email: "",
+    intent: "",
+    message: "",
   });
-  const [status, setStatus] = useState('idle'); // idle | loading | success | error
-  const [errorMsg, setErrorMsg] = useState('');
+  const [status, setStatus] = useState("idle"); // idle | loading | success | error
+  const [errorMsg, setErrorMsg] = useState("");
   const [turnstileToken, setTurnstileToken] = useState(null);
   const turnstileRef = useRef(null);
 
@@ -128,25 +129,30 @@ function CoffeeChatForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setErrorMsg('');
+    setErrorMsg("");
 
     // Client-side validation
-    if (!formData.name.trim() || !formData.email.trim() || !formData.intent || !formData.message.trim()) {
-      setErrorMsg('Please fill in all required fields.');
+    if (
+      !formData.name.trim() ||
+      !formData.email.trim() ||
+      !formData.intent ||
+      !formData.message.trim()
+    ) {
+      setErrorMsg("Please fill in all required fields.");
       return;
     }
 
     if (!turnstileToken) {
-      setErrorMsg('Please complete the verification.');
+      setErrorMsg("Please complete the verification.");
       return;
     }
 
-    setStatus('loading');
+    setStatus("loading");
 
     try {
       const res = await fetch(CONTACT_API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...formData,
           turnstileToken,
@@ -156,35 +162,39 @@ function CoffeeChatForm() {
       const data = await res.json();
 
       if (res.ok && data.success) {
-        setStatus('success');
-        setFormData({ name: '', email: '', intent: '', message: '' });
+        setStatus("success");
+        setFormData({ name: "", email: "", intent: "", message: "" });
         setTurnstileToken(null);
         turnstileRef.current?.reset();
 
         // Reset to idle after 5 seconds
-        setTimeout(() => setStatus('idle'), 5000);
+        setTimeout(() => setStatus("idle"), 5000);
       } else {
-        setStatus('error');
+        setStatus("error");
         const msg = data.details?.length
-          ? data.details.join(' ')
-          : data.error || 'Something went wrong. Please try again.';
+          ? data.details.join(" ")
+          : data.error || "Something went wrong. Please try again.";
         setErrorMsg(msg);
         turnstileRef.current?.reset();
         setTurnstileToken(null);
       }
     } catch {
-      setStatus('error');
-      setErrorMsg('Network error. Please check your connection and try again.');
+      setStatus("error");
+      setErrorMsg("Network error. Please check your connection and try again.");
       turnstileRef.current?.reset();
       setTurnstileToken(null);
     }
   };
 
   return (
-    <form className={`glass ${styles.form}`} onSubmit={handleSubmit} id="coffee-chat-form">
+    <form
+      className={`glass ${styles.form}`}
+      onSubmit={handleSubmit}
+      id="coffee-chat-form"
+    >
       {/* Success overlay */}
-      {status === 'success' && (
-        <div className={styles.successOverlay}>
+      {status === "success" && (
+        <div className={styles.successOverlay} role="status">
           <CheckCircle size={48} className={styles.successIcon} />
           <p className={styles.successText}>Message sent! ☕</p>
           <p className={styles.successSubtext}>
@@ -208,7 +218,7 @@ function CoffeeChatForm() {
             placeholder="Your name"
             className={styles.input}
             required
-            disabled={status === 'loading'}
+            disabled={status === "loading"}
             autoComplete="name"
           />
         </div>
@@ -226,7 +236,7 @@ function CoffeeChatForm() {
             placeholder="you@example.com"
             className={styles.input}
             required
-            disabled={status === 'loading'}
+            disabled={status === "loading"}
             autoComplete="email"
           />
         </div>
@@ -241,12 +251,16 @@ function CoffeeChatForm() {
           name="intent"
           value={formData.intent}
           onChange={handleChange}
-          className={`${styles.input} ${styles.select} ${!formData.intent ? styles.selectPlaceholder : ''}`}
+          className={`${styles.input} ${styles.select} ${!formData.intent ? styles.selectPlaceholder : ""}`}
           required
-          disabled={status === 'loading'}
+          disabled={status === "loading"}
         >
           {INTENT_OPTIONS.map((opt) => (
-            <option key={opt.value} value={opt.value} disabled={opt.value === ''}>
+            <option
+              key={opt.value}
+              value={opt.value}
+              disabled={opt.value === ""}
+            >
               {opt.label}
             </option>
           ))}
@@ -266,12 +280,10 @@ function CoffeeChatForm() {
           className={`${styles.input} ${styles.textarea}`}
           rows={5}
           required
-          disabled={status === 'loading'}
+          disabled={status === "loading"}
           maxLength={2000}
         />
-        <span className={styles.charCount}>
-          {formData.message.length}/2000
-        </span>
+        <span className={styles.charCount}>{formData.message.length}/2000</span>
       </div>
 
       {/* Turnstile */}
@@ -283,15 +295,15 @@ function CoffeeChatForm() {
           onError={() => setTurnstileToken(null)}
           onExpire={() => setTurnstileToken(null)}
           options={{
-            theme: 'dark',
-            size: 'flexible',
+            theme: "light",
+            size: "flexible",
           }}
         />
       </div>
 
       {/* Error message */}
       {errorMsg && (
-        <div className={styles.errorBanner}>
+        <div className={styles.errorBanner} role="alert">
           <AlertCircle size={16} />
           <span>{errorMsg}</span>
         </div>
@@ -301,10 +313,10 @@ function CoffeeChatForm() {
       <button
         type="submit"
         className={`btn-primary ${styles.submitBtn}`}
-        disabled={status === 'loading' || status === 'success'}
+        disabled={status === "loading" || status === "success"}
         id="coffee-chat-submit"
       >
-        {status === 'loading' ? (
+        {status === "loading" ? (
           <>
             <span className={styles.spinner} />
             Sending...

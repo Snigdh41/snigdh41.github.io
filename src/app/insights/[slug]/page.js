@@ -1,10 +1,10 @@
-import Link from 'next/link';
-import { notFound } from 'next/navigation';
-import { ArrowLeft } from 'lucide-react';
-import Navbar from '@/components/Navbar/Navbar';
-import Footer from '@/components/Footer/Footer';
-import { insights, personalInfo, siteUrl } from '@/data/content';
-import styles from './article.module.css';
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { ArrowLeft } from "lucide-react";
+import Navbar from "@/components/Navbar/Navbar";
+import Footer from "@/components/Footer/Footer";
+import { insights, personalInfo, siteUrl } from "@/data/content";
+import styles from "./article.module.css";
 
 export function generateStaticParams() {
   return insights.map((post) => ({ slug: post.slug }));
@@ -28,18 +28,25 @@ export async function generateMetadata({ params }) {
     keywords: post.tags,
     alternates: { canonical: url },
     openGraph: {
-      type: 'article',
+      type: "article",
       title: post.title,
       description,
       url,
-      siteName: 'Snigdh Sharma',
+      siteName: "Snigdh Sharma",
       publishedTime: post.dateISO,
       authors: [personalInfo.name],
       tags: post.tags,
-      images: [{ url: `${siteUrl}/og-image.png`, width: 1200, height: 630, alt: post.title }],
+      images: [
+        {
+          url: `${siteUrl}/og-image.png`,
+          width: 1200,
+          height: 630,
+          alt: post.title,
+        },
+      ],
     },
     twitter: {
-      card: 'summary_large_image',
+      card: "summary_large_image",
       title: post.title,
       description,
       images: [`${siteUrl}/og-image.png`],
@@ -49,11 +56,11 @@ export async function generateMetadata({ params }) {
 
 function Block({ block }) {
   switch (block.type) {
-    case 'h2':
+    case "h2":
       return <h2>{block.text}</h2>;
-    case 'quote':
+    case "quote":
       return <blockquote className={styles.quote}>{block.text}</blockquote>;
-    case 'ul':
+    case "ul":
       return (
         <ul>
           {block.items.map((item, i) => (
@@ -61,7 +68,7 @@ function Block({ block }) {
           ))}
         </ul>
       );
-    case 'p':
+    case "p":
     default:
       return <p>{block.text}</p>;
   }
@@ -77,25 +84,25 @@ export default async function ArticlePage({ params }) {
   const related = insights.filter((p) => p.slug !== post.slug).slice(0, 2);
 
   const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'BlogPosting',
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
     headline: post.title,
     description,
     datePublished: post.dateISO,
     dateModified: post.dateISO,
     articleSection: post.category,
-    keywords: post.tags.join(', '),
+    keywords: post.tags.join(", "),
     author: {
-      '@type': 'Person',
+      "@type": "Person",
       name: personalInfo.name,
       url: siteUrl,
     },
     publisher: {
-      '@type': 'Person',
+      "@type": "Person",
       name: personalInfo.name,
       url: siteUrl,
     },
-    mainEntityOfPage: { '@type': 'WebPage', '@id': url },
+    mainEntityOfPage: { "@type": "WebPage", "@id": url },
     image: `${siteUrl}/og-image.png`,
     url,
   };
@@ -108,7 +115,7 @@ export default async function ArticlePage({ params }) {
       />
       <Navbar />
       <div className={styles.wrapper}>
-        <article className={styles.article}>
+        <article id="main-content" className={styles.article}>
           <Link href="/#insights" className={styles.backLink}>
             <ArrowLeft size={16} />
             Back to Insights
@@ -150,7 +157,9 @@ export default async function ArticlePage({ params }) {
                   href={`/insights/${post.slug}`}
                   className={`glass glass-hover ${styles.relatedCard}`}
                 >
-                  <span className={styles.relatedCategory}>{post.category}</span>
+                  <span className={styles.relatedCategory}>
+                    {post.category}
+                  </span>
                   <h3 className={styles.relatedTitle}>{post.title}</h3>
                 </Link>
               ))}

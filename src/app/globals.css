@@ -8,31 +8,32 @@
 /* ---------- CSS Custom Properties ---------- */
 :root {
   /* Colors */
-  --bg-primary: #0a0a0f;
-  --bg-surface: #13131a;
-  --bg-surface-elevated: #1a1a25;
-  --bg-surface-hover: #22222f;
-  --border-subtle: #2a2a3a;
-  --border-accent: #3a3a5a;
+  --bg-primary: #f8f7f2;
+  --bg-surface: #f0efe8;
+  --bg-surface-elevated: #e9e9df;
+  --bg-surface-hover: #e4e6db;
+  --border-subtle: #d8dbd0;
+  --border-accent: #b8c2b0;
 
-  --color-primary: #818cf8;
-  --color-primary-hover: #6366f1;
+  --color-primary: #376348;
+  --color-primary-hover: #254b35;
   --color-primary-glow: rgba(99, 102, 241, 0.4);
-  --color-secondary: #a78bfa;
-  --color-accent: #c084fc;
+  --color-secondary: #4c7054;
+  --color-accent: #547b57;
 
-  --text-primary: #f1f5f9;
-  --text-secondary: #94a3b8;
-  --text-tertiary: #64748b;
-  --text-accent: #818cf8;
+  --text-primary: #252c25;
+  --text-secondary: #5e675c;
+  --text-tertiary: #697263;
+  --text-accent: #376348;
 
-  --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  --gradient-hero: linear-gradient(135deg, #0a0a0f 0%, #1a1030 50%, #0a0a0f 100%);
+  --gradient-primary: linear-gradient(135deg, #376348 0%, #254b35 100%);
+  --gradient-hero: linear-gradient(135deg, #f8f7f2 0%, #1a1030 50%, #f8f7f2 100%);
   --gradient-card: linear-gradient(135deg, rgba(129, 140, 248, 0.08) 0%, rgba(167, 139, 250, 0.04) 100%);
-  --gradient-border: linear-gradient(135deg, #818cf8, #a78bfa, #c084fc);
-  --gradient-text: linear-gradient(135deg, #818cf8 0%, #c084fc 50%, #818cf8 100%);
+  --gradient-border: linear-gradient(135deg, #376348, #4c7054, #547b57);
+  --gradient-text: linear-gradient(135deg, #376348 0%, #547b57 50%, #376348 100%);
 
   /* Typography */
+  --font-mono: 'SFMono-Regular', Consolas, monospace;
   --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-heading: 'Space Grotesk', 'Inter', sans-serif;
 
@@ -214,7 +215,7 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Glassmorphism */
 .glass {
-  background: rgba(19, 19, 26, 0.6);
+  background: var(--bg-surface);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--border-subtle);
@@ -226,7 +227,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .glass-hover:hover {
-  background: rgba(26, 26, 37, 0.8);
+  background: var(--bg-surface-elevated);
   border-color: var(--border-accent);
   transform: translateY(-4px);
   box-shadow: var(--shadow-lg);
@@ -384,3 +385,10 @@ h1, h2, h3, h4, h5, h6 {
     --text-5xl: 1.75rem;
   }
 }
+
+/* Shared editorial theme and accessible interaction states. */
+:root { --radius-md: 6px; --radius-lg: 8px; --color-primary-glow: rgba(55,99,72,.12); --shadow-lg: 0 10px 25px rgba(35,50,30,.06); }
+.btn-primary,.btn-secondary { border-radius: 4px; padding: 13px 21px; }
+.gradient-text { background:none; -webkit-text-fill-color:currentColor; color:var(--color-primary); }
+a:focus-visible,button:focus-visible,summary:focus-visible { outline:2px solid var(--color-primary); outline-offset:5px; }
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}

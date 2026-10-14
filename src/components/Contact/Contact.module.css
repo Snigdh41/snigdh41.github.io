@@ -209,7 +209,7 @@
   background: rgba(239, 68, 68, 0.1);
   border: 1px solid rgba(239, 68, 68, 0.25);
   border-radius: var(--radius-md);
-  color: #fca5a5;
+  color: #a52b2b;
   font-size: var(--text-sm);
   animation: slideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -249,7 +249,7 @@
   align-items: center;
   justify-content: center;
   gap: var(--space-4);
-  background: rgba(19, 19, 26, 0.95);
+  background: var(--bg-primary);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   border-radius: var(--radius-lg);
@@ -331,3 +331,5 @@
     width: 100%;
   }
 }
+
+@media(max-width:480px){.form{padding:16px}.submitBtn{min-width:0}.contactValue{overflow-wrap:anywhere}}

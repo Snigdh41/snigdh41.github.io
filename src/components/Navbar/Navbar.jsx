@@ -1,121 +1,68 @@
-'use client';
-
-import { useState, useEffect } from 'react';
-import { Download } from 'lucide-react';
-import { navLinks, personalInfo } from '@/data/content';
-import styles from './Navbar.module.css';
-
+"use client";
+import { useEffect, useState } from "react";
+import { ArrowUpRight, Menu, X } from "lucide-react";
+import s from "./Navbar.module.css";
+const links = [
+  ["Work", "projects"],
+  ["About", "about"],
+  ["Experience", "experience"],
+  ["Writing", "insights"],
+];
 export default function Navbar() {
-  const [scrolled, setScrolled] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState('');
-
+  const [open, setOpen] = useState(false);
   useEffect(() => {
-    let ticking = false;
-    const handleScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          setScrolled(window.scrollY > 50);
-          ticking = false;
-        });
-        ticking = true;
-      }
+    const close = (e) => {
+      if (e.key === "Escape") setOpen(false);
     };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("keydown", close);
+    return () => window.removeEventListener("keydown", close);
   }, []);
-
-  /* Intersection Observer for active section */
-  useEffect(() => {
-    const sectionIds = navLinks.map((l) => l.href.replace('#', ''));
-
-    // ⚡ Bolt: Batch into a single IntersectionObserver instead of creating one per section
-    // This reduces memory overhead and improves performance during scroll events
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) setActiveSection(entry.target.id);
-        });
-      },
-      { rootMargin: '-40% 0px -55% 0px' }
-    );
-
-    sectionIds.forEach((id) => {
-      const el = document.getElementById(id);
-      if (el) observer.observe(el);
-    });
-
-    return () => observer.disconnect();
-  }, []);
-
-  const handleNavClick = () => setMenuOpen(false);
-
   return (
     <>
-      <nav className={`${styles.nav} ${scrolled ? styles.scrolled : ''}`}>
-        <div className={styles.navInner}>
-          <a href="/" className={styles.logo}>
-            S<span>.</span>
+      <a className={s.skip} href="#main-content">
+        Skip to content
+      </a>
+      <header className={s.nav}>
+        <div className={s.inner}>
+          <a className={s.logo} href="/" aria-label="Snigdh Sharma home">
+            snigdh<span>.</span>
           </a>
-
-          <div className={styles.links}>
-            {navLinks.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                className={`${styles.link} ${activeSection === link.href.split('#')[1] ? styles.active : ''
-                  }`}
-              >
-                {link.label}
+          <nav className={s.desktop} aria-label="Main navigation">
+            {links.map(([label, id]) => (
+              <a key={id} href={`/#${id}`}>
+                {label}
               </a>
             ))}
-          </div>
-
-          <a
-            href={personalInfo.resumeUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={`btn-primary ${styles.resumeBtn}`}
-          >
-            <Download size={14} />
-            Resume
+          </nav>
+          <a className={s.contact} href="/#contact">
+            Let’s connect <ArrowUpRight size={16} />
           </a>
-
           <button
-            className={`${styles.menuBtn} ${menuOpen ? styles.open : ''}`}
-            onClick={() => setMenuOpen(!menuOpen)}
-            aria-label="Toggle menu"
+            className={s.toggle}
+            aria-label={open ? "Close menu" : "Open menu"}
+            aria-expanded={open}
+            aria-controls="mobile-navigation"
+            onClick={() => setOpen(!open)}
           >
-            <span />
-            <span />
-            <span />
+            {open ? <X /> : <Menu />}
           </button>
         </div>
-      </nav>
-
-      {/* Mobile Menu */}
-      <div className={`${styles.mobileMenu} ${menuOpen ? styles.open : ''}`}>
-        {navLinks.map((link) => (
-          <a
-            key={link.href}
-            href={link.href}
-            className={styles.mobileLink}
-            onClick={handleNavClick}
-          >
-            {link.label}
-          </a>
-        ))}
-        <a
-          href={personalInfo.resumeUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="btn-primary"
-          onClick={handleNavClick}
+        <nav
+          className={s.mobile}
+          id="mobile-navigation"
+          aria-label="Mobile navigation"
+          hidden={!open}
         >
-          <Download size={14} />
-          Resume
-        </a>
-      </div>
+          {links.map(([label, id]) => (
+            <a key={id} href={`/#${id}`} onClick={() => setOpen(false)}>
+              {label}
+            </a>
+          ))}
+          <a href="/#contact" onClick={() => setOpen(false)}>
+            Let’s connect ↗
+          </a>
+        </nav>
+      </header>
     </>
   );
 }
