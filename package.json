@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "test": "jest",
+    "test:lab": "node --test scripts/agent-security.test.mjs",
     "test:seo": "node scripts/check-seo.mjs"
   },
   "dependencies": {

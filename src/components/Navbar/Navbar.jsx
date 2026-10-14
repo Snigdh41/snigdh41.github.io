@@ -3,10 +3,11 @@ import { useEffect, useState } from "react";
 import { ArrowUpRight, Menu, X } from "lucide-react";
 import s from "./Navbar.module.css";
 const links = [
-  ["Work", "projects"],
-  ["About", "about"],
-  ["Experience", "experience"],
-  ["Writing", "insights"],
+  ["Work", "/#projects"],
+  ["About", "/#about"],
+  ["Experience", "/#experience"],
+  ["Writing", "/insights"],
+  ["Lab", "/labs/agent-security"],
 ];
 export default function Navbar() {
   const [open, setOpen] = useState(false);
@@ -29,7 +30,7 @@ export default function Navbar() {
           </a>
           <nav className={s.desktop} aria-label="Main navigation">
             {links.map(([label, id]) => (
-              <a key={id} href={`/#${id}`}>
+              <a key={id} href={id}>
                 {label}
               </a>
             ))}
@@ -54,7 +55,7 @@ export default function Navbar() {
           hidden={!open}
         >
           {links.map(([label, id]) => (
-            <a key={id} href={`/#${id}`} onClick={() => setOpen(false)}>
+            <a key={id} href={id} onClick={() => setOpen(false)}>
               {label}
             </a>
           ))}

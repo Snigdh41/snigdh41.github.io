@@ -1,4 +1,7 @@
+import { agentLabInsight } from "./agentLabInsight";
+
 export const newInsights = [
+  agentLabInsight,
   {
     slug: "production-ai-agent-checklist",
     category: "AI Engineering",

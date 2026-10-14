@@ -176,6 +176,30 @@ export default function Home() {
             </div>
           </div>
         </section>
+        <section className={s.section} aria-labelledby="lab-title">
+          <div className={s.sectionHead}>
+            <div>
+              <span className={s.kicker}>BUILD / BREAK / UNDERSTAND</span>
+              <h2 id="lab-title">An agent-security lab you can inspect.</h2>
+            </div>
+          </div>
+          <p>
+            Seven synthetic scenarios. Four authorization controls. See what
+            changes when an agent requests the wrong data or an unapproved
+            action.
+          </p>
+          <div className={s.actions} style={{ marginTop: 24 }}>
+            <Link className="btn-primary" href="/labs/agent-security">
+              Try the interactive lab ↗
+            </Link>
+            <Link
+              className={s.textLink}
+              href="/insights/agent-tool-authorization-lab"
+            >
+              Read the experiment →
+            </Link>
+          </div>
+        </section>
         <section id="experience" className={s.section}>
           <div className={s.sectionHead}>
             <div>

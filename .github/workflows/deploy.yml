@@ -30,6 +30,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Test agent authorization lab
+        run: npm run test:lab
+
       - name: Build
         run: npm run build
         env:

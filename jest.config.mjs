@@ -8,7 +8,7 @@ const createJestConfig = nextJest({
 const config = {
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
   testEnvironment: 'jest-environment-jsdom',
-  testPathIgnorePatterns: ['/node_modules/', '/workers/'],
+  testPathIgnorePatterns: ['/node_modules/', '/workers/', '/scripts/agent-security.test.mjs'],
 }
 
 export default createJestConfig(config)

@@ -14,6 +14,12 @@ export default function sitemap() {
       changeFrequency: "monthly",
       priority: 0.8,
     },
+    {
+      url: `${siteUrl}/labs/agent-security`,
+      lastModified: "2026-10-14",
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
     ...insights.map((post) => ({
       url: `${siteUrl}/insights/${post.slug}`,
       lastModified: post.updatedISO || post.dateISO,

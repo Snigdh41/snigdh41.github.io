@@ -65,6 +65,14 @@ function Block({ block }) {
   switch (block.type) {
     case "h2":
       return <h2 id={headingId(block.text)}>{block.text}</h2>;
+    case "link":
+      return (
+        <p>
+          <Link href={block.href} className="btn-secondary">
+            {block.text}
+          </Link>
+        </p>
+      );
     case "code":
       return (
         <figure className={styles.code}>
