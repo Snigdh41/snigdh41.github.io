@@ -196,7 +196,7 @@ export default async function ArticlePage({ params }) {
             <section className={styles.sources} aria-labelledby="sources-title">
               <h2 id="sources-title">Sources &amp; further reading</h2>
               <p>
-                Sources checked on October 14, 2026. Product capabilities may
+                Sources checked on {post.sourcesChecked || "October 14, 2026"}. Product capabilities may
                 change; consult the linked documentation before implementation.
               </p>
               <ul>

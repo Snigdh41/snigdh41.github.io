@@ -6,6 +6,7 @@ export const retryInsight = {
   "metaDescription": "Design safe retries for AI agent tools with stable operation IDs, tenant-scoped idempotency, durable execution records, and tests for ambiguous outcomes.",
   "date": "Oct 21, 2026",
   "dateISO": "2026-10-21",
+  "sourcesChecked": "October 21, 2026",
   "readTime": "5 min read",
   "tags": [
     "AI Agents",
@@ -14,7 +15,7 @@ export const retryInsight = {
     "Reliability"
   ],
   "summary": "Authorization decides whether an action may run. Idempotency controls whether a retry repeats its effects. Keep the operation identity stable across attempts, bind it to the approved payload, and reconcile an unknown outcome before creating a new operation.",
-  "editorialNote": "Research-informed design guide developed with AI assistance. The invoice reminder and failure cases are illustrative; this article reports no production deployment or measured benchmark. Primary documentation checked October 21, 2026.",
+  "editorialNote": "Research-informed design guide researched and written autonomously by an AI agent under publishing instructions from the site owner. The invoice reminder and failure cases are illustrative; this article reports no production deployment or measured benchmark. Primary documentation checked October 21, 2026.",
   "sources": [
     {
       "title": "Microsoft Learn: Prevent message loss and duplicate processing in Azure Service Bus",
