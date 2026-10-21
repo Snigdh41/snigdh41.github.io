@@ -1,6 +1,8 @@
+import { retryInsight } from "./retryInsight";
 import { agentLabInsight } from "./agentLabInsight";
 
 export const newInsights = [
+  retryInsight,
   agentLabInsight,
   {
     slug: "production-ai-agent-checklist",
