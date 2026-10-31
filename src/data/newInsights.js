@@ -1,7 +1,9 @@
+import { migrationInsight } from "./migrationInsight";
 import { retryInsight } from "./retryInsight";
 import { agentLabInsight } from "./agentLabInsight";
 
 export const newInsights = [
+  migrationInsight,
   retryInsight,
   agentLabInsight,
   {
