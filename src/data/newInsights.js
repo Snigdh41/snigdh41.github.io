@@ -1,9 +1,11 @@
+import { supplyInsight } from "./supplyInsight";
 import { auditInsight } from "./auditInsight";
 import { migrationInsight } from "./migrationInsight";
 import { retryInsight } from "./retryInsight";
 import { agentLabInsight } from "./agentLabInsight";
 
 export const newInsights = [
+  supplyInsight,
   auditInsight,
   migrationInsight,
   retryInsight,
